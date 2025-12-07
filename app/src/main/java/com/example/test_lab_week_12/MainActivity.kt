@@ -12,6 +12,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.test_lab_week_12.model.Movie
 import com.google.android.material.snackbar.Snackbar
 import kotlinx.coroutines.launch
+import java.util.Calendar
 
 class MainActivity : AppCompatActivity() {
     private val movieAdapter by lazy {
@@ -47,8 +48,16 @@ class MainActivity : AppCompatActivity() {
                 launch {
                     // collect the list of movies from the StateFlow
                     movieViewModel.popularMovies.collect { movies ->
+                        // ASSIGNMENT: Implement data filter (descending by popularity)
+                        val currentYear = Calendar.getInstance().get(Calendar.YEAR).toString()
+                        val filteredMovies = movies
+                            .filter { movie ->
+                                movie.releaseDate?.startsWith(currentYear) == true
+                            }
+                            .sortedByDescending { it.popularity }
+
                         // add the List of movies to the adapter
-                        movieAdapter.addMovies(movies)
+                        movieAdapter.addMovies(filteredMovies)
                     }
                 }
                 launch {
